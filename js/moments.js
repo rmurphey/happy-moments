@@ -4,38 +4,42 @@ var getHashNum = require('./helpers/getHashNum');
 // using list from API call
 module.exports = function(data) {
 
-  var allMoments, count, date, moment, i;
+  var allMoments, count, currentMoment;
+
+  currentMoment = getHashNum(window.location.href);
   allMoments = data;
   count = allMoments.count;
 
   var randomMoment = function() {
-    i = Math.floor(Math.random()*count);
-    return updateMoments(i);
+    currentMoment = Math.floor(Math.random()*count);
+    return displayMoment(currentMoment);
   };
 
   var nextMoment = function() {
-    i++;
-    return updateMoments(i);
+    currentMoment++;
+    return displayMoment(currentMoment);
   };
 
   var prevMoment = function() {
-    i--;
-    return updateMoments(i);
+    currentMoment--;
+    return displayMoment(currentMoment);
   };
 
-  if (getHashNum(window.location.href)) {
-    i = getHashNum(window.location.href);
-    updateMoments(i);
+  if (currentMoment) {
+    // There was a moment specified in the hash.
+    updateMoments();
   } else {
+    // No moment specified, we need to pick one.
     randomMoment();
   }
 
-  function updateMoments(i) {
-    date = allMoments.results.happyMoments[i].date.text;
-    moment = allMoments.results.happyMoments[i].moment;
+  function displayMoment (n) {
+    var momentData = allMoments.results.happyMoments[n];
+    var date = momentData.date.text;
+    var moment = momentData.moment;
     document.querySelector('.moment--text').innerHTML = moment;
     document.querySelector('.moment--date').innerHTML = formatDate(date);
-    history.pushState(null, null, '#' + i);
+    history.pushState(null, null, '#' + n);
   }
 
   return {

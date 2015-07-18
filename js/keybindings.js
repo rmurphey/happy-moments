@@ -6,7 +6,7 @@ module.exports = function(momentChanger) {
 
   document.onkeydown = function(e) {
     e.preventDefault();
-    unicode = e.keyCode ? e.keyCode : e.charCode;
+    unicode = e.keyCode || e.charCode;
     console.log(unicode);
 
     if(unicode === 32) {
